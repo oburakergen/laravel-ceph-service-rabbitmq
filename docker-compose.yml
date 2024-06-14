@@ -1,0 +1,140 @@
+version: '3.8'
+
+services:
+  user-service:
+    restart: always
+    build:
+      context: ./user-service
+    container_name: user-service
+    depends_on:
+      - mysql
+      - rabbitmq
+      - redis
+    ports:
+      - "8001:9000"
+    volumes:
+      - ./user-service:/var/www
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=user_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    networks:
+      - app-network
+
+#  license-service:
+#    build:
+#      context: ./license-service
+#    container_name: license-service
+#    ports:
+#      - "8002:9000"
+#    volumes:
+#      - ./license-service:/var/www
+#    environment:
+#      - DB_HOST=mysql
+#      - DB_DATABASE=license_service_db
+#      - DB_USERNAME=root
+#      - DB_PASSWORD=secret
+#    networks:
+#      - app-network
+#
+#  file-management-service:
+#    build:
+#      context: ./file-management-service
+#    container_name: file-management-service
+#    ports:
+#      - "8003:9000"
+#    volumes:
+#      - ./file-management-service:/var/www
+#    environment:
+#      - DB_HOST=mysql
+#      - DB_DATABASE=file_management_db
+#      - DB_USERNAME=root
+#      - DB_PASSWORD=secret
+#    networks:
+#      - app-network
+#
+#  notification-service:
+#    build:
+#      context: ./notification-service
+#    container_name: notification-service
+#    ports:
+#      - "8004:9000"
+#    volumes:
+#      - ./notification-service:/var/www
+#    depends_on:
+#      - mysql
+#      - rabbitmq
+#      - redis
+#    environment:
+#      - DB_HOST=mysql
+#      - DB_DATABASE=notification_service
+#      - DB_USERNAME=root
+#      - DB_PASSWORD=secret
+#    networks:
+#      - app-network
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+
+#  horizon:
+#    build:
+#      context: ./notification-service
+#    container_name: horizon
+#    command: php artisan horizon
+#    depends_on:
+#      - notification-service
+#      - redis
+#    networks:
+#      - app-network
+
+#  ceph:
+#    build: ./ceph
+#    container_name: ceph
+#    restart: unless-stopped
+#    ports:
+#      - "7480:7480"
+#    volumes:
+#      - ceph_data:/var/lib/ceph
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+  ceph_data:
+    driver: local
+  redisinsight:
+    driver: local
