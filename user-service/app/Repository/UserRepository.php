@@ -5,24 +5,23 @@ namespace App\Repository;
 use App\Models\User;
 use App\Repository\Contracts\CrudClass;
 use App\Repository\Contracts\LoginInterface;
-use Illuminate\Database\Eloquent\Model;
 
-class UserRepository extends CrudClass implements LoginInterface
+final class UserRepository extends CrudClass implements LoginInterface
 {
-    protected Model $model;
-    public function __construct()
+    public function __construct(protected User $user)
     {
-        $this->model = new User();
-        parent::__construct($this->model);
+        parent::__construct($this->user);
     }
-    public function login(array $data): string
+
+    /**
+     * @throws \Exception
+     */
+    public function login(array $data): User
     {
-        $user = $this->user->where('email', $data['email'])->first();
-        if ($user) {
-            if (password_verify($data['password'], $user->password)) {
-                return $user->createToken('authToken')->plainTextToken;
-            }
+        try {
+            return $this->user->where('email', $data['email'])->first();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
-        return '';
     }
 }

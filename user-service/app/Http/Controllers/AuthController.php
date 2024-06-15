@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
+use App\Services\AuthService;
+use Illuminate\Support\Facades\Redis;
 
 class AuthController extends Controller
 {
@@ -11,21 +13,14 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected AuthService $authService){}
+
+    public function login(LoginRequest $request)
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
-    }
-
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if (auth()->attempt($credentials)) {
-            $token = auth()->user()->createToken('authToken')->plainTextToken;
-
-            return response()->json(['token' => $token], 200);
+        try {
+            return response()->success($this->authService->login($request->validated()));
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage());
         }
-
-        return response()->json(['message' => 'Unauthorized'], 401);
     }
 }

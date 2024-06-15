@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
-use App\Http\Resources\UserResource;
-use App\Service\UserService;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 
 class UserApi extends Controller
 {
@@ -17,26 +16,37 @@ class UserApi extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): ResourceCollection
+    public function index(): JsonResponse
     {
-        return $this->userService->getAllUsers();
+        try {
+            return response()->success($this->userService->getAllUsers());
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage());
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserCreateRequest $request): UserResource
+    public function store(UserCreateRequest $request): JsonResponse
     {
-
-        return $this->userService->createUser($request->validated());
+        try {
+            return response()->success($this->userService->createUser($request->validated()));
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, int $id): bool
+    public function update(UserUpdateRequest $request, int $id): JsonResponse
     {
-        return $this->userService->updateUser($id, $request->validated());
+        try {
+            return response()->success($this->userService->updateUser($id, $request->validated()));
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage());
+        }
     }
 
     /**
@@ -44,6 +54,10 @@ class UserApi extends Controller
      */
     public function destroy(int $id): bool
     {
-        return $this->userService->deleteUser($id);
+        try {
+            return $this->userService->deleteUser($id);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage());
+        }
     }
 }

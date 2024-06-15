@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repository\UserRepository;
+use App\Services\RabbitMQService;
 use Illuminate\Support\ServiceProvider;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
@@ -14,19 +16,18 @@ class RabbitMQServiceProvider extends ServiceProvider
     {
         $this->app->singleton(AMQPStreamConnection::class, function () {
             return new AMQPStreamConnection(
-                env('RABBITMQ_HOST'),
-                env('RABBITMQ_PORT'),
-                env('RABBITMQ_USER'),
-                env('RABBITMQ_PASSWORD')
+                env('RABBITMQ_HOST', 'rabbitmq'),
+                env('RABBITMQ_PORT', 5672),
+                env('RABBITMQ_USER', 'guest'),
+                env('RABBITMQ_PASSWORD', 'guest')
             );
         });
-    }
 
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-        //
+        $this->app->singleton(RabbitMQService::class, function ($app) {
+            return new RabbitMQService(
+                $app->make(AMQPStreamConnection::class),
+                $app->make(UserRepository::class)
+            );
+        });
     }
 }

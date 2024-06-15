@@ -9,28 +9,33 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     locales \
     zip \
-    jpegoptim optipng pngquant gifsicle \
+    jpegoptim \
+    optipng \
+    pngquant \
+    gifsicle \
     vim \
     unzip \
     git \
     curl \
     libonig-dev \
     libzip-dev \
-    supervisor \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd
+    supervisor
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring zip exif pcntl bcmath sockets
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
 COPY . .
+RUN rm -f composer.lock
 COPY .env.example .env
+COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-RUN composer install
-
-RUN chown -R www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 9000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]
+
+ENTRYPOINT ["docker-entrypoint.sh"]

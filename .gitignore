@@ -31,3 +31,8 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
+!/notification-service/composer.lock
+!/user-service/composer.lock
+!/object-storage-service/composer.lock
+!/license-service/composer.lock
+!/file-management-service/composer.lock

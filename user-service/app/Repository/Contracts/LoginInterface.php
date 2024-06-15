@@ -2,6 +2,9 @@
 
 namespace App\Repository\Contracts;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+
 interface LoginInterface
 {
     /*
@@ -9,5 +12,5 @@ interface LoginInterface
      * @param array $data
      * @return string
      */
-    public function login(array $data): string;
+    public function login(array $data): Model;
 }

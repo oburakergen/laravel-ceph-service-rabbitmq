@@ -5,10 +5,10 @@
       <list>
         <option value="$PROJECT_DIR$/license-service/tests/Unit" />
         <option value="$PROJECT_DIR$/license-service/tests/Feature" />
-        <option value="$PROJECT_DIR$/file-management-service/tests/Unit" />
-        <option value="$PROJECT_DIR$/file-management-service/tests/Feature" />
         <option value="$PROJECT_DIR$/user-service/tests/Unit" />
         <option value="$PROJECT_DIR$/user-service/tests/Feature" />
+        <option value="$PROJECT_DIR$/file-management-service/tests/Unit" />
+        <option value="$PROJECT_DIR$/file-management-service/tests/Feature" />
       </list>
     </option>
   </component>
