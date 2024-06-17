@@ -1,106 +1,106 @@
 services:
-#  user-service:
-#    restart: always
-#    build:
-#      context: ./user-service
-#    container_name: user-service
-#    depends_on:
-#      - mysql
-#      - rabbitmq
-#      - minio
-#    ports:
-#      - "8001:9000"
-#    volumes:
-#      - ./user-service:/var/www
-#    environment:
-#      - DB_HOST=mysql
-#      - DB_DATABASE=user_service
-#      - DB_USERNAME=root
-#      - DB_PASSWORD=secret
-#    networks:
-#      - app-network
-#
-#  license-service:
-#    restart: always
-#    build:
-#      context: ./license-service
-#    container_name: license-service
-#    depends_on:
-#      - mysql
-#      - rabbitmq
-#      - minio
-#    ports:
-#      - "8002:9000"
-#    volumes:
-#      - ./license-service:/var/www
-#    environment:
-#      - DB_HOST=mysql
-#      - DB_DATABASE=license_service
-#      - DB_USERNAME=root
-#      - DB_PASSWORD=secret
-#    networks:
-#      - app-network
-#
-#  file-management-service:
-#    build:
-#      context: ./file-management-service
-#    container_name: file-management-service
-#    ports:
-#      - "8003:9000"
-#    depends_on:
-#      - mysql
-#      - rabbitmq
-#      - minio
-#    volumes:
-#      - ./file-management-service:/var/www
-#    environment:
-#      - DB_HOST=mysql
-#      - DB_DATABASE=file_management_service
-#      - DB_USERNAME=root
-#      - DB_PASSWORD=secret
-#    networks:
-#      - app-network
-#
-#  notification-service:
-#    build:
-#      context: ./notification-service
-#    container_name: notification-service
-#    ports:
-#      - "8004:9000"
-#    volumes:
-#      - ./notification-service:/var/www
-#    depends_on:
-#      - mysql
-#      - rabbitmq
-#      - minio
-#    environment:
-#      - DB_HOST=mysql
-#      - DB_DATABASE=notification_service
-#      - DB_USERNAME=root
-#      - DB_PASSWORD=secret
-#    networks:
-#      - app-network
-#
-#
-#  object-storage-service:
-#    build:
-#      context: ./object-storage-service
-#    container_name: object-storage-service
-#    ports:
-#      - "8005:9000"
-#    volumes:
-#      - ./notification-service:/var/www
-#    depends_on:
-#      - mysql
-#      - rabbitmq
-#      - minio
-#    environment:
-#      - DB_HOST=mysql
-#      - DB_DATABASE=object_storage_service
-#      - DB_USERNAME=root
-#      - DB_PASSWORD=secret
-#    networks:
-#      - app-network
+  user-service:
+    restart: always
+    build:
+      context: ./user-service
+    container_name: user-service
+    depends_on:
+      - mysql
+      - rabbitmq
+      - minio
+    ports:
+      - "8001:9000"
+    volumes:
+      - ./user-service:/var/www
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=user_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    networks:
+      - app-network
+
+  license-service:
+    restart: always
+    build:
+      context: ./license-service
+    container_name: license-service
+    depends_on:
+      - mysql
+      - rabbitmq
+      - minio
+    ports:
+      - "8002:9000"
+    volumes:
+      - ./license-service:/var/www
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=license_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    networks:
+      - app-network
+
+  file-management-service:
+    build:
+      context: ./file-management-service
+    container_name: file-management-service
+    ports:
+      - "8003:9000"
+    depends_on:
+      - mysql
+      - rabbitmq
+      - minio
+    volumes:
+      - ./file-management-service:/var/www
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=file_management_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    networks:
+      - app-network
+
+  notification-service:
+    build:
+      context: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8004:9000"
+    volumes:
+      - ./notification-service:/var/www
+    depends_on:
+      - mysql
+      - rabbitmq
+      - minio
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=notification_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    networks:
+      - app-network
+
+
+  object-storage-service:
+    build:
+      context: ./object-storage-service
+    container_name: object-storage-service
+    ports:
+      - "8005:9000"
+    volumes:
+      - ./notification-service:/var/www
+    depends_on:
+      - mysql
+      - rabbitmq
+      - minio
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=object_storage_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    networks:
+      - app-network
 
 
   minio:
@@ -111,7 +111,7 @@ services:
       MINIO_SECRET_KEY: minioadmin
     command: server /data
     ports:
-      - "9000:9000"
+      - "8585:9000"
     volumes:
       - minio_data:/data
     networks:

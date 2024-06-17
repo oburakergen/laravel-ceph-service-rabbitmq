@@ -7,8 +7,11 @@ use App\Repository\Contracts\CrudClass;
 
 final class LicenseRepository extends CrudClass
 {
-    public function __construct(protected UserLicense $user)
+    protected UserLicense $user;
+    public function __construct()
     {
+        $this->user = new UserLicense();
+
         parent::__construct($this->user);
     }
 }

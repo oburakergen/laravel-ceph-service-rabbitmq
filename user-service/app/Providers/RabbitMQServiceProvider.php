@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Repository\UserRepository;
 use App\Services\RabbitMQService;
 use Illuminate\Support\ServiceProvider;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -26,7 +25,6 @@ class RabbitMQServiceProvider extends ServiceProvider
         $this->app->singleton(RabbitMQService::class, function ($app) {
             return new RabbitMQService(
                 $app->make(AMQPStreamConnection::class),
-                $app->make(UserRepository::class)
             );
         });
     }

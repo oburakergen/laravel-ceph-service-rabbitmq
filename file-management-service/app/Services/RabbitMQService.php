@@ -7,6 +7,7 @@ use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use function Symfony\Component\Translation\t;
 
 class RabbitMQService
 {
@@ -67,12 +68,15 @@ class RabbitMQService
      */
     public function routeMessage(string $function, array $payload): void
     {
-//        $bucketService = new BucketService($this, $this->userBucketRepository);
-//
-//        switch ($function) {
-//            case 'createUser':
-//                $bucketService->createBucket($payload);
-//                break;
-//        }
+        $bucketService = new BucketService($this);
+
+        switch ($function) {
+            case 'createUser':
+                $bucketService->createBucket($payload);
+                break;
+            case 'createDelete':
+                $bucketService->deleteBucket($payload);
+                break;
+        }
     }
 }

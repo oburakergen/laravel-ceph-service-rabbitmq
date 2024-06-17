@@ -45,6 +45,11 @@ class RabbitMQServiceTest extends TestCase
         $queue = 'user_queue';
         $message = 'test_message';
 
+        $this->mockChannel->shouldReceive('queue_declare')
+            ->once()
+            ->with($queue, false, true, false, false)
+            ->andReturnNull();
+
         $this->mockChannel->shouldReceive('basic_publish')
             ->once()
             ->with(Mockery::on(function ($msg) use ($message) {

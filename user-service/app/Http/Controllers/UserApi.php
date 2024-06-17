@@ -6,11 +6,12 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UserApi extends Controller
 {
     public function __construct(protected UserService $userService){
-        $this->middleware('auth:api', ['except' => ['store', 'index']]);
+        $this->middleware('auth:api', ['except' => ['store']]);
     }
 
     /**
@@ -19,7 +20,7 @@ class UserApi extends Controller
     public function index(): JsonResponse
     {
         try {
-            return response()->success($this->userService->getAllUsers());
+            return response()->json($this->userService->getAllUsers());
         } catch (\Exception $e) {
             return response()->error($e->getMessage());
         }
@@ -43,7 +44,7 @@ class UserApi extends Controller
     public function update(UserUpdateRequest $request, int $id): JsonResponse
     {
         try {
-            return response()->success($this->userService->updateUser($id, $request->validated()));
+            return response()->success($this->userService->updateUser(auth()->id(), $request->validated()));
         } catch (\Exception $e) {
             return response()->error($e->getMessage());
         }
@@ -55,7 +56,7 @@ class UserApi extends Controller
     public function destroy(int $id): bool
     {
         try {
-            return $this->userService->deleteUser($id);
+            return $this->userService->deleteUser(auth()->id());
         } catch (\Exception $e) {
             return response()->error($e->getMessage());
         }

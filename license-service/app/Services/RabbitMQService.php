@@ -57,14 +57,14 @@ class RabbitMQService
      */
     public function routeMessage(string $function, array $payload): void
     {
-        $userLicenseService = new UserLicenseService($this, $this->licenseRepository);
+        $userLicenseService = new UserLicenseService($this);
 
         switch ($function) {
             case 'createUser':
                 $userLicenseService->createLicense($payload['user_id']);
                 break;
-            case 'updateUserLicense':
-                $userLicenseService->updateLicense($payload['data']);
+            case 'deleteUser':
+                $userLicenseService->deleteLicense($payload['user_id']);
                 break;
         }
     }

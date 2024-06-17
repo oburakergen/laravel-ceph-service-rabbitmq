@@ -14,7 +14,7 @@ class RabbitMQService
     protected AbstractChannel|AMQPChannel $channel;
     protected string $queue;
 
-    public function __construct(AMQPStreamConnection $connection, protected UserRepository $userRepository)
+    public function __construct(AMQPStreamConnection $connection)
     {
         $this->connection = $connection;
         $this->channel = $this->connection->channel();

@@ -7,8 +7,10 @@ use App\Repository\Contracts\CrudClass;
 
 final class UserBucketRepository extends CrudClass
 {
-    public function __construct(protected UserBucket $bucket)
+    protected UserBucket $bucket;
+    public function __construct()
     {
-        parent::__construct($this->$bucket);
+        $this->bucket = new UserBucket();
+        parent::__construct($this->bucket);
     }
 }

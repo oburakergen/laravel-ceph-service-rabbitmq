@@ -6,4 +6,6 @@ enum BucketAction: string
 {
     case createUser = 'createUser';
     case updateUserLicense = 'updateUserLicense';
+
+    case deleteUser = 'deleteUser';
 }

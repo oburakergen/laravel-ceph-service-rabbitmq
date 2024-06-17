@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
-use App\Repository\Contracts\BucketAction;
 use App\Services\AuthService;
-use Illuminate\Support\Facades\Redis;
 
 class AuthController extends Controller
 {

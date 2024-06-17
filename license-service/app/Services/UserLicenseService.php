@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserLicenseService
 {
-    public function __construct(protected RabbitMQService $rabbitMQService, protected LicenseRepository $licenseRepository){}
+    protected LicenseRepository $licenseRepository;
+    public function __construct(protected RabbitMQService $rabbitMQService){
+        $this->licenseRepository = new LicenseRepository();
+    }
 
     public function createLicense(int $userId): Model
     {
@@ -29,13 +32,16 @@ class UserLicenseService
         return new UserLicenseResource($this->licenseRepository->findOne($userId));
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function updateLicense(array $data): bool
+    public function deleteLicense(int $userId): bool
     {
-        $license = $this->licenseRepository->findOne($data['user_id']);
+        $license = $this->licenseRepository->findOne($userId);
 
-        return $this->licenseRepository->update($license, $data);
+        $this->rabbitMQService->sendMessage('file_management_queue', json_encode([
+            'action' => BucketAction::deletUser->name,
+            'user_id' => $userId,
+            'license_id' => $license->id
+        ]));
+
+        return $this->licenseRepository->delete($userId);
     }
 }

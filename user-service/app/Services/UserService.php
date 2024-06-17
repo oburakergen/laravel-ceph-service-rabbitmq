@@ -40,6 +40,10 @@ class UserService
 
     public function deleteUser($id): bool
     {
+        $this->rabbitMQService->sendMessage('license_queue', json_encode([
+            'action' => BucketAction::deletUser->name,
+            'user_id' => $id,
+        ]));
         return $this->userRepo->delete($id);
     }
 }
