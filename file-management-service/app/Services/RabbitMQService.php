@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Repository\UserBucketRepository;
 use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -17,7 +18,7 @@ class RabbitMQService
     {
         $this->connection = $connection;
         $this->channel = $this->connection->channel();
-        $this->queue = env('RABBITMQ_QUEUE', 'license_queue');
+        $this->queue = env('RABBITMQ_QUEUE', 'file_management_queue');
         $this->channel->queue_declare($this->queue, false, true, false, false);
     }
 
@@ -27,9 +28,9 @@ class RabbitMQService
     public function listenerQueue(): void
     {
         $callback = function (AMQPMessage $msg) {
-            $data = json_decode($msg->body, true);
+            $message = json_decode($msg->body, true);
 
-            $this->routeMessage($data['function'], $data);
+            $this->routeMessage($message['action'], $message);
             $msg->ack();
         };
 
@@ -46,6 +47,15 @@ class RabbitMQService
         $this->channel->basic_publish($msg, '', $queue);
     }
 
+    public function getMessage(string $queue, callable $callback): void
+    {
+        $this->channel->basic_consume($queue, '', false, true, false, false, $callback);
+
+        while ($this->channel->is_consuming()) {
+            $this->channel->wait();
+        }
+    }
+
     public function __destruct()
     {
         $this->channel->close();
@@ -57,15 +67,12 @@ class RabbitMQService
      */
     public function routeMessage(string $function, array $payload): void
     {
-        $userLicenseService = new UserLicenseService($this, $this->licenseRepository);
-
-        switch ($function) {
-            case 'createUser':
-                $userLicenseService->createLicense($payload['user_id']);
-                break;
-            case 'updateUserLicense':
-                $userLicenseService->updateLicense($payload['data']);
-                break;
-        }
+//        $bucketService = new BucketService($this, $this->userBucketRepository);
+//
+//        switch ($function) {
+//            case 'createUser':
+//                $bucketService->createBucket($payload);
+//                break;
+//        }
     }
 }

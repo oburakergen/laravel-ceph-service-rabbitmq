@@ -11,7 +11,7 @@ abstract class CrudClass
     /**
      * @throws \Exception
      */
-    public function findOne(int $userId): Model|null
+    public function findOne(int $userId): Model
     {
         try {
             return $this->model->where(['user_id' => $userId])->active()->firstOrFail();
@@ -39,18 +39,6 @@ abstract class CrudClass
     {
         try {
             return $this->model->find($id)->update($data);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function delete($id): bool
-    {
-        try {
-            return $this->model->destroy($id);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

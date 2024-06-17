@@ -2,47 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UserLicenseService;
 use Illuminate\Http\Request;
 
 class UserLicenseApi extends Controller
 {
+    public function __construct(protected UserLicenseService $userLicenseService){}
     /**
-     * Display a listing of the resource.
+     * Handle the incoming request.
      */
-    public function index()
+    public function __invoke(Request $request)
     {
-        //
-    }
+        try {
+            $userId = $request->user;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return response()->success($this->userLicenseService->getLicenseByUserId($userId));
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage());
+        }
     }
 }

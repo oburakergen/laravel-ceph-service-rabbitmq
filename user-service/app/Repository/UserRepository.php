@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Repository\Contracts\CrudClass;
 use App\Repository\Contracts\LoginInterface;
 
-final class UserRepository extends CrudClass implements LoginInterface
+class UserRepository extends CrudClass implements LoginInterface
 {
     public function __construct(protected User $user)
     {

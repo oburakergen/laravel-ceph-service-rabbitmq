@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Repository\LicenseRepository;
 use App\Services\RabbitMQService;
 use Illuminate\Support\ServiceProvider;
 use PhpAmqpLib\Connection\AMQPStreamConnection;

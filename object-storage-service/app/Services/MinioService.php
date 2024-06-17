@@ -3,12 +3,13 @@
 
 namespace App\Services;
 
+use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
 class MinioService
 {
-    protected $s3Client;
+    protected S3Client $s3Client;
 
     public function __construct()
     {
@@ -24,7 +25,10 @@ class MinioService
         ]);
     }
 
-    public function createBucket($bucketName)
+    /**
+     * @throws \Exception
+     */
+    public function createBucket(string $bucketName)
     {
         try {
             $result = $this->s3Client->createBucket([
@@ -36,10 +40,58 @@ class MinioService
         }
     }
 
-    public function createUser($username, $password)
+    /**
+     * @throws \Exception
+     */
+    public function uploadObject(string $bucketName, $key, $filePath)
     {
-        // MinIO does not support user management through the AWS SDK
-        // You might need to use the MinIO Admin API to manage users
-        // This is a placeholder function for creating users
+        try {
+            $result = $this->s3Client->putObject([
+                'Bucket' => $bucketName,
+                'Key'    => $key,
+                'SourceFile' => $filePath,
+            ]);
+            return $result;
+        } catch (S3Exception $e) {
+            throw new \Exception('Error uploading object: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function deleteObject($bucketName, $key)
+    {
+        try {
+            $result = $this->s3Client->deleteObject([
+                'Bucket' => $bucketName,
+                'Key'    => $key,
+            ]);
+            return $result;
+        } catch (S3Exception $e) {
+            throw new \Exception('Error deleting object: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function checkBucketSize($bucketName, $maxSize)
+    {
+        try {
+            $objects = $this->s3Client->listObjectsV2([
+                'Bucket' => $bucketName,
+            ]);
+
+            $totalSize = 0;
+
+            foreach ($objects['Contents'] as $object) {
+                $totalSize += $object['Size'];
+            }
+
+            return $totalSize;
+        } catch (S3Exception $e) {
+            throw new \Exception('Error checking bucket size: ' . $e->getMessage());
+        }
     }
 }

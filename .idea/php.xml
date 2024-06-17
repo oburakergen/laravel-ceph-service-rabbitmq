@@ -369,6 +369,12 @@
       <path value="$PROJECT_DIR$/file-management-service/vendor/paragonie/constant_time_encoding" />
       <path value="$PROJECT_DIR$/file-management-service/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/file-management-service/vendor/spatie/error-solutions" />
+      <path value="$PROJECT_DIR$/license-service/vendor/spatie/error-solutions" />
+      <path value="$PROJECT_DIR$/license-service/vendor/stella-maris/clock" />
+      <path value="$PROJECT_DIR$/license-service/vendor/lcobucci/clock" />
+      <path value="$PROJECT_DIR$/license-service/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/license-service/vendor/tymon/jwt-auth" />
+      <path value="$PROJECT_DIR$/user-service/vendor/spatie/error-solutions" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

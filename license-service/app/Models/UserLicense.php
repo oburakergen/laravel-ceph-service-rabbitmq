@@ -15,6 +15,7 @@ class UserLicense extends Model
         'max_file_size',
         'max_file_count',
         'max_storage',
+        'used_storage',
         'expires_at',
     ];
 
